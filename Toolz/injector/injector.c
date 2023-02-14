@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <Windows.h>
 
-void create_warpatch_process(int argc, char **dll_name)
+void create_warpatch_process(int argc, char** dll_name)
 {
 	int i;
 	STARTUPINFOA		si;
@@ -9,14 +9,14 @@ void create_warpatch_process(int argc, char **dll_name)
 	PVOID				Addr;
 	HANDLE				hThread;
 	HMODULE				hKernel32;
-	LPSTR 				cmdArgs = "war.exe --acctname=U1VDRQ== --sesstoken=U1VDRQ==";
+	LPSTR 				cmdArgs = "WOH.exe --acctname=U1VDRQ== --sesstoken=U1VDRQ==";
 
 	hKernel32 = GetModuleHandleA("kernel32.dll");
 	memset(&si, 0, sizeof(STARTUPINFO));
 	si.cb = sizeof(STARTUPINFO);
 	memset(&pi, 0, sizeof(PROCESS_INFORMATION));
 
-	if (!CreateProcessA("war.exe", cmdArgs, 0, 0, 0, CREATE_SUSPENDED, 0, 0, &si, &pi))
+	if (!CreateProcessA("WOH.exe", cmdArgs, 0, 0, 0, CREATE_SUSPENDED, 0, 0, &si, &pi))
 	{
 		printf("[-] CreateProcessA() failed : is correct ? LastError : %x\n", GetLastError());
 		exit(EXIT_FAILURE);
@@ -32,8 +32,8 @@ void create_warpatch_process(int argc, char **dll_name)
 		}
 		WriteProcessMemory(pi.hProcess, Addr, (void*)dll_name[i + 1], strlen(dll_name[i + 1]) + 1, NULL);
 		hThread = CreateRemoteThread(pi.hProcess, NULL, 0,
-					(LPTHREAD_START_ROUTINE)GetProcAddress(hKernel32, "LoadLibraryA"), 
-					(LPVOID)Addr, 0, NULL);
+			(LPTHREAD_START_ROUTINE)GetProcAddress(hKernel32, "LoadLibraryA"),
+			(LPVOID)Addr, 0, NULL);
 		WaitForSingleObject(hThread, INFINITE);
 	}
 	ResumeThread(pi.hThread);
@@ -41,7 +41,7 @@ void create_warpatch_process(int argc, char **dll_name)
 }
 
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
 	PVOID OldValue = NULL;
 
